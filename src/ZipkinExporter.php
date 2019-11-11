@@ -63,7 +63,7 @@ class ZipkinExporter implements ExporterInterface
     /**
      * string
      */
-    private $accessToken
+    private $accessToken;
 
     /**
      * Create a new ZipkinExporter
@@ -95,7 +95,9 @@ class ZipkinExporter implements ExporterInterface
           'lightstep.tracer_platform_version' => phpversion()
         ];
 
-        $this->defaultAttributes= array_merge($this->defaultAttributes, $defaultAttributes);
+        if (!empty($defaultAttributes)) {
+          $this->defaultAttributes = array_merge($this->defaultAttributes, $defaultAttributes);
+        }
     }
 
     /**
@@ -184,7 +186,7 @@ class ZipkinExporter implements ExporterInterface
             $traceId = str_pad($span->traceId(), 32, '0', STR_PAD_LEFT);
 
             $attributes = array_merge($this->defaultAttributes, $span->attributes());
-            $attributes['lightstep.access_token'] = $this->accessToken
+            $attributes['lightstep.access_token'] = $this->accessToken;
 
             if (empty($attributes)) {
                 // force json_encode to render an empty object ("{}") instead of an empty array ("[]")
