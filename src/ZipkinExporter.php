@@ -78,7 +78,6 @@ class ZipkinExporter implements ExporterInterface
     public function __construct($name, $accessToken, $endpointUrl = null, array $defaultAttributes= null, array $server = null)
     {
         $server = $server ?: $_SERVER;
-        $this->accessToken = $accessToken;
         $this->endpointUrl = ($endpointUrl === null) ? self::DEFAULT_ENDPOINT : $endpointUrl;
         $this->localEndpoint = [
             'serviceName' => $name
