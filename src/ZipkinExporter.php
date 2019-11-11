@@ -91,7 +91,7 @@ class ZipkinExporter implements ExporterInterface
         $this->defaultAttributes= [
           LIGHTSTEP_HOSTNAME => gethostname(),
           LIGHTSTEP_PLATFORM_VERSION => phpversion(),
-          LIGHTSTEP_ACCESS_TOKEN => accessToken
+          LIGHTSTEP_ACCESS_TOKEN => $accessToken
         ];
 
         if (!empty($defaultAttributes)) {
