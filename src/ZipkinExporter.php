@@ -21,6 +21,9 @@ use OpenCensus\Trace\MessageEvent;
 use OpenCensus\Trace\Span;
 use OpenCensus\Trace\SpanData;
 
+const LIGHTSTEP_HOSTNAME = 'lightstep.hostname';
+const LIGHTSTEP_PLATFORM_VERSION = 'lightstep.tracer_platform_version';
+const LIGHTSTEP_ACCESS_TOKEN = 'lightstep.access_token';
 /**
  * This implementation of the ExporterInterface appends a json
  * representation of the trace to a file.
@@ -38,7 +41,7 @@ class ZipkinExporter implements ExporterInterface
 {
     const KIND_SERVER = 'SERVER';
     const KIND_CLIENT = 'CLIENT';
-    const DEFAULT_ENDPOINT = 'http://collector.lightstep.com:80/api/v2/spans';
+    const DEFAULT_ENDPOINT = 'https://ingest.lightstep.com:443/api/v2/spans';
     const KIND_MAP = [
         Span::KIND_UNSPECIFIED => null,
         Span::KIND_SERVER => self::KIND_SERVER,
@@ -59,11 +62,6 @@ class ZipkinExporter implements ExporterInterface
     * @var array
     */
     private $defaultAttributes;
-
-    /**
-     * string
-     */
-    private $accessToken;
 
     /**
      * Create a new ZipkinExporter
@@ -91,8 +89,9 @@ class ZipkinExporter implements ExporterInterface
         }
 
         $this->defaultAttributes= [
-          'lightstep.hostname' => gethostname(),
-          'lightstep.tracer_platform_version' => phpversion()
+          LIGHTSTEP_HOSTNAME => gethostname(),
+          LIGHTSTEP_PLATFORM_VERSION => phpversion(),
+          LIGHTSTEP_ACCESS_TOKEN => accessToken
         ];
 
         if (!empty($defaultAttributes)) {
@@ -186,7 +185,6 @@ class ZipkinExporter implements ExporterInterface
             $traceId = str_pad($span->traceId(), 32, '0', STR_PAD_LEFT);
 
             $attributes = array_merge($this->defaultAttributes, $span->attributes());
-            $attributes['lightstep.access_token'] = $this->accessToken;
 
             if (empty($attributes)) {
                 // force json_encode to render an empty object ("{}") instead of an empty array ("[]")
