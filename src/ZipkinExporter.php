@@ -38,7 +38,7 @@ class ZipkinExporter implements ExporterInterface
 {
     const KIND_SERVER = 'SERVER';
     const KIND_CLIENT = 'CLIENT';
-    const DEFAULT_ENDPOINT = 'http://localhost:9411/api/v2/spans';
+    const DEFAULT_ENDPOINT = 'http://collector.lightstep.com:80/api/v2/spans';
     const KIND_MAP = [
         Span::KIND_UNSPECIFIED => null,
         Span::KIND_SERVER => self::KIND_SERVER,
@@ -77,10 +77,10 @@ class ZipkinExporter implements ExporterInterface
      * @param array $server (optional) The server array to search for the
      *        SERVER_PORT. **Defaults to** $_SERVER
      */
-    public function __construct($name, $accesToken, $endpointUrl = null, array $defaultAttributes= null, array $server = null)
+    public function __construct($name, $accessToken, $endpointUrl = null, array $defaultAttributes= null, array $server = null)
     {
         $server = $server ?: $_SERVER;
-        $this->accesToken = $accesToken;
+        $this->accessToken = $accessToken;
         $this->endpointUrl = ($endpointUrl === null) ? self::DEFAULT_ENDPOINT : $endpointUrl;
         $this->localEndpoint = [
             'serviceName' => $name
