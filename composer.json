@@ -1,5 +1,5 @@
 {
-    "name": "opencensus/opencensus-exporter-zipkin",
+    "name": "lightstep/opencensus-exporter-zipkin",
     "description": "OpenCensus Zipkin Exporter for PHP",
     "type": "library",
     "require": {
