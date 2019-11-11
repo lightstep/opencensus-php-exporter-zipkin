@@ -13,10 +13,10 @@ to report to LightStep.
 
 ## Installation & basic usage
 
-1. Install the `opencensus/opencensus-exporter-zipkin` package using [composer][composer]:
+1. Install the `lightstep/opencensus-exporter-zipkin` package using [composer][composer]:
 
     ```bash
-    $ composer require lightstep/opencensus-exporter-zipkin:~0.1
+    $ composer require lightstep/opencensus-exporter-zipkin:~0.2
     ```
 
 1. Initialize a tracer for your application:
@@ -60,7 +60,7 @@ $exporter->setLocalIpv6($ipv6);
 
 ## Versioning
 
-[![Packagist](https://img.shields.io/packagist/v/opencensus/opencensus-exporter-zipkin.svg)][packagist-package]
+[![Packagist](https://img.shields.io/packagist/v/lightstep/opencensus-exporter-zipkin.svg)][packagist-package]
 
 This library follows [Semantic Versioning][semver].
 
@@ -104,4 +104,4 @@ This is not an official Google product.
 [composer]: https://getcomposer.org/
 [semver]: http://semver.org/
 [ci-build]: https://circleci.com/gh/census-ecosystem/opencensus-php-exporter-zipkin
-[packagist-package]: https://packagist.org/packages/opencensus/opencensus-exporter-zipkin
+[packagist-package]: https://packagist.org/packages/lightstep/opencensus-exporter-zipkin
