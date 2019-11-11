@@ -16,7 +16,7 @@ to report to LightStep.
 1. Install the `opencensus/opencensus-exporter-zipkin` package using [composer][composer]:
 
     ```bash
-    $ composer require lightstep/opencensus-exporter-zipkin:~0.1
+    $ composer require lightstep/opencensus-exporter-zipkin:~0.2
     ```
 
 1. Initialize a tracer for your application:
