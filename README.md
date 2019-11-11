@@ -36,7 +36,7 @@ You may provide an optional initialization parameter for the Zipkin endpoint.
 This value should be a full URL to the v2 spans endpoint.
 
 ```php
-$exporter = new ZipkinExporter('my-service-name', 'http://example.com:9411/api/v2/spans', LIGHTSTEP_ACCESS_TOKEN);
+$exporter = new ZipkinExporter('my-service-name', LIGHTSTEP_ACCESS_TOKEN, 'http://example.com:9411/api/v2/spans');
 ```
 
 ### Configuring the local IPv4 or IPv6 address
