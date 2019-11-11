@@ -1,7 +1,11 @@
 # OpenCensus Zipkin Exporter for PHP
 
+
 This library provides an [`ExporterInterface`][exporter-interface] for exporting
 Trace data to a Zipkin instance.
+
+This is a fork of the [OpenCensus PHP exporter](https://github.com/lightstep/opencensus-php-exporter-zipkin) modified
+to report to LightStep.
 
 [![CircleCI](https://circleci.com/gh/census-ecosystem/opencensus-php-exporter-zipkin.svg?style=svg)][ci-build]
 [![Packagist](https://img.shields.io/packagist/v/opencensus/opencensus-exporter-zipkin.svg)][packagist-package]
@@ -12,7 +16,7 @@ Trace data to a Zipkin instance.
 1. Install the `opencensus/opencensus-exporter-zipkin` package using [composer][composer]:
 
     ```bash
-    $ composer require opencensus/opencensus-exporter-zipkin:~0.1
+    $ composer require lightstep/opencensus-exporter-zipkin:~0.1
     ```
 
 1. Initialize a tracer for your application:
@@ -32,7 +36,7 @@ You may provide an optional initialization parameter for the Zipkin endpoint.
 This value should be a full URL to the v2 spans endpoint.
 
 ```php
-$exporter = new ZipkinExporter('my-service-name', 'http://example.com:9411/api/v2/spans');
+$exporter = new ZipkinExporter('my-service-name', LIGHTSTEP_ACCESS_TOKEN, 'http://example.com:9411/api/v2/spans');
 ```
 
 ### Configuring the local IPv4 or IPv6 address
