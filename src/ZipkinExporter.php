@@ -75,8 +75,13 @@ class ZipkinExporter implements ExporterInterface
      * @param array $server (optional) The server array to search for the
      *        SERVER_PORT. **Defaults to** $_SERVER
      */
-    public function __construct($name, $accessToken, $endpointUrl = null, array $defaultAttributes= null, array $server = null)
-    {
+    public function __construct(
+        $name,
+        $accessToken,
+        $endpointUrl = null,
+        array $defaultAttributes = null,
+        array $server = null
+    ) {
         $server = $server ?: $_SERVER;
         $this->endpointUrl = ($endpointUrl === null) ? self::DEFAULT_ENDPOINT : $endpointUrl;
         $this->localEndpoint = [
@@ -94,7 +99,7 @@ class ZipkinExporter implements ExporterInterface
         ];
 
         if (!empty($defaultAttributes)) {
-          $this->defaultAttributes = array_merge($this->defaultAttributes, $defaultAttributes);
+            $this->defaultAttributes = array_merge($this->defaultAttributes, $defaultAttributes);
         }
     }
 
@@ -131,21 +136,36 @@ class ZipkinExporter implements ExporterInterface
         if (empty($spans)) {
             return false;
         }
-
+        $endpointUrl = $this->endpointUrl;
+        $scheme = parse_url($endpointUrl, PHP_URL_SCHEME);
         $spans = $this->convertSpans($spans);
 
         try {
             $json = json_encode($spans);
-            $contextOptions = [
-                'http' => [
-                    'method' => 'POST',
-                    'header' => 'Content-Type: application/json',
-                    'content' => $json
-                ]
-            ];
-
-            $context = stream_context_create($contextOptions);
-            file_get_contents($this->endpointUrl, false, $context);
+            // if php curl is available, let's use it
+            if (function_exists('curl_version')) {
+                $ch = curl_init($endpointUrl);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($json)
+                ));
+                $result = curl_exec($ch);
+                curl_close($ch);
+            } else {
+                $contextOptions = [
+                    'http' => [
+                        'method' => 'POST',
+                        'header' => 'Content-Type: application/json',
+                        'content' => $json
+                    ]
+                    ];
+                    $context = stream_context_create($contextOptions);
+                    file_get_contents($endpointUrl, false, $context);
+            }
         } catch (\Exception $e) {
             return false;
         }

@@ -53,7 +53,7 @@ class ZipkinExporterTest extends TestCase
      */
     public function testFormatsTrace()
     {
-        $exporter = new ZipkinExporter('myapp');
+        $exporter = new ZipkinExporter('myapp', 'token');
         $data = $exporter->convertSpans($this->spans);
 
         $this->assertInternalType('array', $data);
@@ -85,7 +85,7 @@ class ZipkinExporterTest extends TestCase
         $span = new Span($spanOpts);
         $span->setStartTime();
         $span->setEndTime();
-        $exporter = new ZipkinExporter('myapp');
+        $exporter = new ZipkinExporter('myapp', 'token');
         $spans = $exporter->convertSpans([$span->spanData()]);
 
         $this->assertEquals($kind, $spans[0]['kind']);
@@ -98,7 +98,7 @@ class ZipkinExporterTest extends TestCase
         ]);
         $span->setStartTime();
         $span->setEndTime();
-        $exporter = new ZipkinExporter('myapp');
+        $exporter = new ZipkinExporter('myapp', 'token');
         $spans = $exporter->convertSpans([$span->spanData()]);
 
         $this->assertArrayNotHasKey('kind', $spans[0]);
@@ -118,7 +118,7 @@ class ZipkinExporterTest extends TestCase
 
     public function testSpanDebug()
     {
-        $exporter = new ZipkinExporter('myapp');
+        $exporter = new ZipkinExporter('myapp', 'token');
         $spans = $exporter->convertSpans($this->spans, [
             'HTTP_X_B3_FLAGS' => '1'
         ]);
@@ -133,7 +133,7 @@ class ZipkinExporterTest extends TestCase
         $span->setStartTime();
         $span->setEndTime();
 
-        $exporter = new ZipkinExporter('myapp');
+        $exporter = new ZipkinExporter('myapp', 'token');
         $spans = $exporter->convertSpans([$span->spanData()]);
 
         $this->assertCount(1, $spans);
@@ -142,14 +142,14 @@ class ZipkinExporterTest extends TestCase
 
     public function testEmptyTrace()
     {
-        $exporter = new ZipkinExporter('myapp');
+        $exporter = new ZipkinExporter('myapp', 'token');
         $spans = $exporter->convertSpans([]);
         $this->assertEmpty($spans);
     }
 
     public function testSkipsIpv4()
     {
-        $exporter = new ZipkinExporter('myapp');
+        $exporter = new ZipkinExporter('myapp', 'token');
         $spans = $exporter->convertSpans($this->spans);
 
         $endpoint = $spans[0]['localEndpoint'];
@@ -159,7 +159,7 @@ class ZipkinExporterTest extends TestCase
 
     public function testSetsIpv4()
     {
-        $exporter = new ZipkinExporter('myapp');
+        $exporter = new ZipkinExporter('myapp', 'token');
         $exporter->setLocalIpv4('1.2.3.4');
         $spans = $exporter->convertSpans($this->spans);
 
@@ -170,7 +170,7 @@ class ZipkinExporterTest extends TestCase
 
     public function testSetsIpv6()
     {
-        $exporter = new ZipkinExporter('myapp');
+        $exporter = new ZipkinExporter('myapp', 'token');
         $exporter->setLocalIpv6('2001:db8:85a3::8a2e:370:7334');
         $spans = $exporter->convertSpans($this->spans);
 
@@ -181,7 +181,13 @@ class ZipkinExporterTest extends TestCase
 
     public function testSetsLocalEndpointPort()
     {
-        $exporter = new ZipkinExporter('myapp', null, ['SERVER_PORT' => "80"]);
+        $exporter = new ZipkinExporter(
+            'myapp',
+            'token',
+            null,
+            null,
+            ['SERVER_PORT' => "80"]
+        );
         $spans = $exporter->convertSpans($this->spans);
 
         $endpoint = $spans[0]['localEndpoint'];
